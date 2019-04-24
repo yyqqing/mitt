@@ -54,8 +54,11 @@ export default function mitt(all: EventHandlerMap) {
 		 */
 		once(type: string, handler: EventHandler) {
 			(all[type] || (all[type] = [])).push((evt) => {
-				all[type].splice(all[type].indexOf(handler) >>> 0, 1);
-				handler(evt);
+				if (!handler.__c) {
+					all[type].splice(all[type].indexOf(handler) >>> 0, 1);
+					handler(evt);
+					handler.__c = true;
+				}
 			});
 		},
 
