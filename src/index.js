@@ -46,6 +46,20 @@ export default function mitt(all: EventHandlerMap) {
 		},
 
 		/**
+		 * Register an event handler that only run once for the given type
+		 *
+		 * @param  {String} type	Type of event to listen for, or `"*"` for all events
+		 * @param  {Function} handler Function to call in response to given event
+		 * @memberOf mitt
+		 */
+		once(type: string, handler: EventHandler) {
+			(all[type] || (all[type] = [])).push((evt) => {
+				all[type].splice(all[type].indexOf(handler) >>> 0, 1);
+				handler(evt);
+			});
+		},
+
+		/**
 		 * Invoke all handlers for the given type.
 		 * If present, `"*"` handlers are invoked after type-matched handlers.
 		 *
